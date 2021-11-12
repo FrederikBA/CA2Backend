@@ -5,24 +5,28 @@
  */
 package facades;
 
-import dtos.RenameMeDTO;
-import entities.RenameMe;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+
+import entities.ArtPiece;
+import entities.Gallery;
 import utils.EMF_Creator;
 
-/**
- *
- * @author tha
- */
 public class Populator {
-    public static void populate(){
+    public static void populate() {
         EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
-        FacadeExample fe = FacadeExample.getFacadeExample(emf);
-        fe.create(new RenameMeDTO(new RenameMe("First 1", "Last 1")));
-        fe.create(new RenameMeDTO(new RenameMe("First 2", "Last 2")));
-        fe.create(new RenameMeDTO(new RenameMe("First 3", "Last 3")));
+        EntityManager em = emf.createEntityManager();
+
+        Gallery g1 = new Gallery("TestGallery");
+        ArtPiece a1 = new ArtPiece(2021, "TestPainting", "Leonardo DiCaprio", "themonalisa.dk");
+        g1.addArtPiece(a1);
+
+        em.getTransaction().begin();
+        em.persist(a1);
+        em.persist(g1);
+        em.getTransaction().commit();
     }
-    
+
     public static void main(String[] args) {
         populate();
     }

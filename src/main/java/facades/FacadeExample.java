@@ -10,10 +10,6 @@ import javax.persistence.TypedQuery;
 //import errorhandling.RenameMeNotFoundException;
 import utils.EMF_Creator;
 
-/**
- *
- * Rename Class to a relevant name Add add relevant facade methods
- */
 public class FacadeExample {
 
     private static FacadeExample instance;
