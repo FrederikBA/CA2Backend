@@ -3,6 +3,7 @@ package entities;
 import javax.persistence.*;
 
 @Entity
+@NamedQuery(name = "ArtPiece.deleteAllRows", query = "DELETE from ArtPiece")
 public class ArtPiece {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

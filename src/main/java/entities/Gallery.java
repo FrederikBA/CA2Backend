@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@NamedQuery(name = "Gallery.deleteAllRows", query = "DELETE from Gallery")
 public class Gallery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
