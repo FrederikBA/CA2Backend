@@ -27,13 +27,6 @@ public class ArtPiece {
         this.imageUrl = imageUrl;
     }
 
-    public ArtPiece(int year, String artist, String imageUrl, Gallery gallery) {
-        this.year = year;
-        this.artist = artist;
-        this.imageUrl = imageUrl;
-        this.gallery = gallery;
-    }
-
     public Integer getId() {
         return id;
     }

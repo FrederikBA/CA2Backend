@@ -26,31 +26,12 @@ public class ArtFacade {
         return instance;
     }
 
-    public ArtPieceDTO submitArtPiece(ArtPieceDTO artPieceDTO) throws WebApplicationException {
+    public ArtPieceDTO submitArtPiece(ArtPieceDTO artPieceDTO) {
         EntityManager em = emf.createEntityManager();
-        if (getByName(artPieceDTO.getName()).getName().equals(artPieceDTO.getName())) {
-            throw new WebApplicationException("The name has been taken, please try another");
-        } else {
-            ArtPiece artPiece = new ArtPiece(artPieceDTO.getYear(), artPieceDTO.getName(), artPieceDTO.getArtist(), artPieceDTO.getImageUrl());
-            try {
-                em.getTransaction().begin();
-                em.persist(artPiece);
-                em.getTransaction().commit();
-                return new ArtPieceDTO(artPiece);
-            } finally {
-                em.close();
-            }
-        }
-    }
-
-    public ArtPieceDTO setGallery(int artPieceId, int galleryId) {
-        EntityManager em = emf.createEntityManager();
-        ArtPiece artPiece = em.find(ArtPiece.class, artPieceId);
-        Gallery gallery = em.find(Gallery.class, galleryId);
-        gallery.addArtPiece(artPiece);
+        ArtPiece artPiece = new ArtPiece(artPieceDTO.getYear(), artPieceDTO.getName(), artPieceDTO.getArtist(), artPieceDTO.getImageUrl());
         try {
             em.getTransaction().begin();
-            em.merge(artPiece);
+            em.persist(artPiece);
             em.getTransaction().commit();
             return new ArtPieceDTO(artPiece);
         } finally {
@@ -58,16 +39,14 @@ public class ArtFacade {
         }
     }
 
-    public ArtPieceDTO editArtPiece(ArtPieceDTO artPieceDTO) throws WebApplicationException {
+    public ArtPieceDTO editArtPiece(ArtPieceDTO artPieceDTO) {
         EntityManager em = emf.createEntityManager();
         try {
             ArtPiece artPiece = em.find(ArtPiece.class, artPieceDTO.getId());
+
             artPiece.setImageUrl(artPieceDTO.getImageUrl());
-            if (getByName(artPieceDTO.getName()).getName().equals(artPieceDTO.getName())) {
-                throw new WebApplicationException("The name has been taken, please try another");
-            } else {
-                artPiece.setName(artPieceDTO.getName());
-            }
+            artPiece.setName(artPieceDTO.getName());
+
             em.getTransaction().begin();
             em.merge(artPiece);
             em.getTransaction().commit();

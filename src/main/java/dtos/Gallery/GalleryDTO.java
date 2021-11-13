@@ -25,10 +25,9 @@ public class GalleryDTO {
         this.artCollection = ArtPieceDTO.getFromList(gallery.getArtCollection());
     }
 
-    public GalleryDTO(String galleryName, List<ArtPieceDTO> artCollection) {
+    public GalleryDTO(String galleryName) {
         this.id = -1;
         this.galleryName = galleryName;
-        this.artCollection = artCollection;
     }
 
     public int getId() {

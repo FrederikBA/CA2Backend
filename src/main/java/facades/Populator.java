@@ -8,6 +8,7 @@ package facades;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+import dtos.ArtPiece.ArtPieceDTO;
 import entities.ArtPiece;
 import entities.Gallery;
 import utils.EMF_Creator;
@@ -15,11 +16,7 @@ import utils.EMF_Creator;
 public class Populator {
     public static void populate() {
         EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
-        EntityManager em = emf.createEntityManager();
-
-        em.getTransaction().commit();
-
-        em.getTransaction().begin();
+        ArtFacade facade = ArtFacade.getArtFacade(emf);
     }
 
     public static void main(String[] args) {

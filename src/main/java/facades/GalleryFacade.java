@@ -1,7 +1,9 @@
 package facades;
 
+import dtos.ArtPiece.ArtPieceDTO;
 import dtos.Gallery.GalleriesDTO;
 import dtos.Gallery.GalleryDTO;
+import entities.ArtPiece;
 import entities.Gallery;
 
 import javax.persistence.EntityManager;
@@ -33,6 +35,23 @@ public class GalleryFacade {
             em.persist(gallery);
             em.getTransaction().commit();
             return new GalleryDTO(gallery);
+        } finally {
+            em.close();
+        }
+    }
+
+    public String addToGallery(int galleryId, int artPieceId) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Gallery gallery = em.find(Gallery.class, galleryId);
+            ArtPiece artPiece = em.find(ArtPiece.class, artPieceId);
+            gallery.addArtPiece(artPiece);
+
+            em.getTransaction().begin();
+            em.merge(gallery);
+            em.getTransaction().commit();
+
+            return artPiece.getName() + " was added to: " + gallery.getGalleryName();
         } finally {
             em.close();
         }

@@ -20,6 +20,14 @@ public class ArtPiecesDTO {
         this.artCollection = artCollection;
     }
 
+    public int getSize() {
+        int counter = 0;
+        for (ArtPieceDTO a : artCollection) {
+            counter++;
+        }
+        return counter;
+    }
+
     @Override
     public String toString() {
         return "ArtPiecesDTO{" +

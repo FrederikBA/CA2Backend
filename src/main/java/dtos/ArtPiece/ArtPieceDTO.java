@@ -13,7 +13,6 @@ public class ArtPieceDTO {
     private String name;
     private String artist;
     private String imageUrl;
-    private GalleryDTO gallery;
 
     public static List<ArtPieceDTO> getFromList(List<ArtPiece> artCollection) {
         return artCollection.stream()
@@ -27,8 +26,8 @@ public class ArtPieceDTO {
         this.name = artPiece.getName();
         this.artist = artPiece.getArtist();
         this.imageUrl = artPiece.getImageUrl();
-        this.gallery = new GalleryDTO(artPiece.getGallery());
     }
+
 
     public ArtPieceDTO(int year, String name, String artist, String imageUrl) {
         this.id = -1;
