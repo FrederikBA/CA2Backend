@@ -49,6 +49,14 @@ public class ArtPiece {
         this.year = year;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getArtist() {
         return artist;
     }

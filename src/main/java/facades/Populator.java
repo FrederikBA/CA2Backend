@@ -17,14 +17,9 @@ public class Populator {
         EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
 
-        Gallery g1 = new Gallery("TestGallery");
-        ArtPiece a1 = new ArtPiece(2021, "TestPainting", "Leonardo DiCaprio", "themonalisa.dk");
-        g1.addArtPiece(a1);
+        em.getTransaction().commit();
 
         em.getTransaction().begin();
-        em.persist(a1);
-        em.persist(g1);
-        em.getTransaction().commit();
     }
 
     public static void main(String[] args) {
