@@ -40,18 +40,19 @@ public class GalleryFacade {
         }
     }
 
-    public String addToGallery(int galleryId, int artPieceId) {
+    public GalleryDTO addToGallery(int galleryId, ArtPieceDTO artPieceDTO) {
         EntityManager em = emf.createEntityManager();
+        Gallery gallery = em.find(Gallery.class, galleryId);
+        ArtPiece artPiece = em.find(ArtPiece.class, artPieceDTO.getId());
+        gallery.addArtPiece(artPiece);
         try {
-            Gallery gallery = em.find(Gallery.class, galleryId);
-            ArtPiece artPiece = em.find(ArtPiece.class, artPieceId);
-            gallery.addArtPiece(artPiece);
 
             em.getTransaction().begin();
             em.merge(gallery);
             em.getTransaction().commit();
 
-            return artPiece.getName() + " was added to: " + gallery.getGalleryName();
+            return new GalleryDTO(gallery);
+
         } finally {
             em.close();
         }

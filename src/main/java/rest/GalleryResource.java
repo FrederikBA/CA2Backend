@@ -3,8 +3,8 @@ package rest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dtos.ArtPiece.ArtPieceDTO;
-import facades.ArtFacade;
-import facades.UserFacade;
+import dtos.Gallery.GalleryDTO;
+import facades.GalleryFacade;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManagerFactory;
@@ -14,11 +14,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-@Path("/art")
-public class ArtResource {
+@Path("/gallery")
+public class GalleryResource {
 
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
-    private static final ArtFacade facade = ArtFacade.getArtFacade(EMF);
+    private static final GalleryFacade facade = GalleryFacade.getGalleryFacade(EMF);
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     @Context
     private UriInfo context;
@@ -40,37 +40,41 @@ public class ArtResource {
         return gson.toJson(facade.getAll());
     }
 
-    @Path("/count")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getCount() {
-        return gson.toJson(facade.getCount());
-    }
-
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String submitArtPiece(String artPiece) {
+    public String addGallery(String gallery) {
+        GalleryDTO g = gson.fromJson(gallery, GalleryDTO.class);
+        GalleryDTO gNew = facade.addGallery(g);
+        return gson.toJson(gNew);
+    }
+
+    @Path("add/{id}")
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String addToGallery(@PathParam("id") int id, String artPiece) {
         ArtPieceDTO a = gson.fromJson(artPiece, ArtPieceDTO.class);
-        ArtPieceDTO aNew = facade.submitArtPiece(a);
-        return gson.toJson(aNew);
+        GalleryDTO gEdited = facade.addToGallery(id, a);
+
+        return gson.toJson(gEdited);
     }
 
     @Path("/{id}")
     @PUT
-    public String editArtPiece(@PathParam("id") int id, String artPiece) {
-        ArtPieceDTO a = gson.fromJson(artPiece, ArtPieceDTO.class);
-        a.setId(id);
-        ArtPieceDTO aEdited = facade.editArtPiece(a);
-        return gson.toJson(aEdited);
+    public String editGallery(@PathParam("id") int id, String gallery) {
+        GalleryDTO g = gson.fromJson(gallery, GalleryDTO.class);
+        g.setId(id);
+        GalleryDTO gEdited = facade.editGallery(g);
+        return gson.toJson(gEdited);
     }
 
     @Path("/{id}")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String deleteArtPiece(@PathParam("id") int id) {
-        ArtPieceDTO aDeleted = facade.deleteArtPiece(id);
-        return gson.toJson(aDeleted);
+    public String deleteGallery(@PathParam("id") int id) {
+        GalleryDTO gDeleted = facade.deleteGallery(id);
+        return gson.toJson(gDeleted);
     }
 }
