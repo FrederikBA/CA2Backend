@@ -10,8 +10,6 @@ import javax.persistence.EntityManagerFactory;
 
 import dtos.ArtPiece.ArtPieceDTO;
 import dtos.Gallery.GalleryDTO;
-import entities.ArtPiece;
-import entities.Gallery;
 import utils.EMF_Creator;
 
 public class Populator {
