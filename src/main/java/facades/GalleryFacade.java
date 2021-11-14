@@ -98,6 +98,19 @@ public class GalleryFacade {
         }
     }
 
+
+    public GalleryDTO getByName(String galleryName) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Gallery> query = em.createQuery("SELECT g FROM Gallery g WHERE g.galleryName =:galleryName", Gallery.class);
+            query.setParameter("galleryName", galleryName);
+            Gallery result = query.getSingleResult();
+            return new GalleryDTO(result);
+        } finally {
+            em.close();
+        }
+    }
+
     public GalleriesDTO getAll() {
         EntityManager em = emf.createEntityManager();
         try {

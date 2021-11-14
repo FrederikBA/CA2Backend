@@ -33,6 +33,13 @@ public class GalleryResource {
         return gson.toJson(facade.getById(id));
     }
 
+    @Path("/name/{name}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getByName(@PathParam("name") String name) {
+        return gson.toJson(facade.getByName(name));
+    }
+
     @Path("/all")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
