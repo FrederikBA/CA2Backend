@@ -4,6 +4,8 @@ import dtos.ArtPiece.ArtPieceDTO;
 import dtos.ArtPiece.ArtPiecesDTO;
 import entities.ArtPiece;
 import entities.Gallery;
+import entities.Role;
+import entities.User;
 import io.restassured.RestAssured;
 
 import static io.restassured.RestAssured.given;
@@ -90,22 +92,59 @@ class ArtResourceTest {
         g2.addArtPiece(a2);
         g2.addArtPiece(a3);
 
+        Role userRole = new Role("user");
+        Role adminRole = new Role("admin");
+        User user = new User("user", "test");
+        user.addRole(userRole);
+        User admin = new User("admin", "test");
+        admin.addRole(adminRole);
+        User both = new User("user_admin", "test");
+        both.addRole(userRole);
+        both.addRole(adminRole);
+
         try {
             em.getTransaction().begin();
             em.createNamedQuery("ArtPiece.deleteAllRows").executeUpdate();
             em.createNamedQuery("Gallery.deleteAllRows").executeUpdate();
+            em.createQuery("delete from User").executeUpdate();
+            em.createQuery("delete from Role").executeUpdate();
             em.persist(g1);
             em.persist(g2);
             em.persist(a4);
+            em.persist(userRole);
+            em.persist(adminRole);
+            em.persist(user);
+            em.persist(admin);
+            em.persist(both);
             em.getTransaction().commit();
         } finally {
             em.close();
         }
     }
 
+    //This is how we hold on to the token after login, similar to that a client must store the token somewhere
+    private static String securityToken;
+
+    //Utility method to login and set the returned securityToken
+    private static void login(String role, String password) {
+        String json = String.format("{username: \"%s\", password: \"%s\"}", role, password);
+        securityToken = given()
+                .contentType("application/json")
+                .body(json)
+                //.when().post("/api/login")
+                .when().post("/login")
+                .then()
+                .extract().path("token");
+        //System.out.println("TOKEN ---> " + securityToken);
+    }
+
+    private void logOut() {
+        securityToken = null;
+    }
+
     @Test
     public void testServerIsUp() {
-        given().when().get("/art/all").then().statusCode(200);
+        given().when().get("/art/count").then().statusCode(200);
     }
 
     @Test
@@ -121,8 +160,11 @@ class ArtResourceTest {
     @Test
     public void testGetAll() {
         List<ArtPieceDTO> artCollection;
+        login("admin", "test");
         artCollection = given()
                 .contentType("application/json")
+                .accept(ContentType.JSON)
+                .header("x-access-token", securityToken)
                 .get("/art/all").then()
                 .extract()
                 .body()
@@ -203,12 +245,9 @@ class ArtResourceTest {
                 .then()
                 .extract().body().jsonPath().getList("artCollection", ArtPieceDTO.class);
 
-        ArtPieceDTO p1DTO = new ArtPieceDTO(a1);
         ArtPieceDTO p4DTO = new ArtPieceDTO(a4);
 
         assertThat(artCollection, not(hasItem(p4DTO)));
-        assertThat(artCollection, hasItem(p1DTO));
-
     }
 
 }
