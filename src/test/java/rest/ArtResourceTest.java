@@ -186,8 +186,6 @@ class ArtResourceTest {
 
     @Test
     public void testDelete() {
-        ArtPieceDTO artPiece = new ArtPieceDTO(a4);
-
         given()
                 .contentType("application/json")
                 .pathParam("id", a4.getId())

@@ -6,6 +6,7 @@ import dtos.ArtPiece.ArtPieceDTO;
 import facades.ArtFacade;
 import utils.EMF_Creator;
 
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -35,6 +36,7 @@ public class ArtResource {
     @Path("/all")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("admin")
     public String getAll() {
         return gson.toJson(facade.getAll());
     }
